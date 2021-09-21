@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] AnimationCurve jumpFallOff;
 
-    [SerializeField] float mouseSensitivity = 1f;
+    [SerializeField] float mouseSensitivity = 2f;
     [SerializeField] float walkSpeed = 7f;
     [SerializeField] float gravity = -15f;
     [SerializeField] float jumpMultiplier = 10f;
@@ -33,12 +33,16 @@ public class PlayerController : MonoBehaviour
     float velovityY = 0f;
     float cameraPitch = 0f;
 
+    public GameObject currentGun;
+    private Gun currentGunScript;
+
 
 
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        currentGunScript = currentGun.GetComponent<Gun>();
         if (lockCursor)
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -51,6 +55,7 @@ public class PlayerController : MonoBehaviour
     {
         UpdateMouseLook();
         UpdateMovement();
+        UpdateGun();
     }
 
     void UpdateMouseLook()
@@ -97,9 +102,6 @@ public class PlayerController : MonoBehaviour
 
     }
 
-
-
-
     private IEnumerator JumpEvent()
     {
         float slopeLimitBackup = controller.slopeLimit;
@@ -116,6 +118,22 @@ public class PlayerController : MonoBehaviour
 
         controller.slopeLimit = slopeLimitBackup;
         isJumping = false;
+    }
+
+    void UpdateGun()
+    {
+        //if standing within a certain radius of another gun, enable icon on screen and allow a test
+        //for swapping them.
+        //////if they swap them use a temp object and swap the dmg, display, range, fireRate, camera, and ammo.
+
+        if (Input.GetButton("Fire1") && Time.time >= currentGunScript.ableToFireTime)
+        {
+            currentGunScript.ableToFireTime = Time.time + 1 / currentGunScript.fireRate;
+            currentGunScript.Shoot();
+        }
+
+
+
     }
 
 }

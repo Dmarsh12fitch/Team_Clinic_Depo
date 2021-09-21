@@ -20,8 +20,9 @@ public class Enemy : MonoBehaviour
         
     }
 
-    public void enemyHit(float damage)
+    public void takeDamage(float damage)
     {
+        //do some sort of effect
         health -= damage;
         if(health <= 0)
         {
