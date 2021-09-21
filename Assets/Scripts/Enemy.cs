@@ -5,12 +5,12 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public float health;
-    
+    private Rigidbody rb;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody>();
     }
 
 
@@ -33,9 +33,10 @@ public class Enemy : MonoBehaviour
 
     void deathSequence()
     {
+        rb.useGravity = true;
         //disable this enemy's functionality
         //do death anim
-        Destroy(gameObject, 1);
+        Destroy(gameObject, 0.6f);
     }
 
 
