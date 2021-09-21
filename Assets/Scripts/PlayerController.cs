@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] Transform playerCamera = null;
+    public Camera plCam;
 
     [SerializeField] AnimationCurve jumpFallOff;
 
@@ -36,6 +37,11 @@ public class PlayerController : MonoBehaviour
     public GameObject currentGun;
     private Gun currentGunScript;
 
+    int zoom = 20;
+    int normal = 60;
+    float smooth = 5;
+
+    private bool isZoomed = false;
 
 
     // Start is called before the first frame update
@@ -57,6 +63,7 @@ public class PlayerController : MonoBehaviour
         UpdateMovement();
         UpdateGun();
     }
+
 
     void UpdateMouseLook()
     {
@@ -89,7 +96,17 @@ public class PlayerController : MonoBehaviour
 
         velovityY += gravity * Time.deltaTime;
 
-        Vector3 velocity = (transform.forward * currentDirection.y + transform.right * currentDirection.x) * walkSpeed + Vector3.up * velovityY;
+        Vector3 velocity;
+
+        //check for sprint input
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            //sprint
+            velocity = (transform.forward * currentDirection.y + transform.right * currentDirection.x) * walkSpeed * 2 + Vector3.up * velovityY;
+        } else
+        {
+            velocity = (transform.forward * currentDirection.y + transform.right * currentDirection.x) * walkSpeed + Vector3.up * velovityY;
+        }
 
         //Check for jump input
         if (Input.GetKeyDown(KeyCode.Space) && !isJumping)
@@ -122,6 +139,25 @@ public class PlayerController : MonoBehaviour
 
     void UpdateGun()
     {
+        if (Input.GetButton("Fire2"))
+        {
+            isZoomed = true;
+        } else
+        {
+            isZoomed = false;
+        }
+
+        if (isZoomed)
+        {
+            plCam.fieldOfView = Mathf.Lerp(plCam.fieldOfView, zoom, Time.deltaTime * smooth);
+        } else
+        {
+            plCam.fieldOfView = Mathf.Lerp(plCam.fieldOfView, normal, Time.deltaTime * smooth);
+        }
+
+
+
+        //not this
         //if standing within a certain radius of another gun, enable icon on screen and allow a test
         //for swapping them.
         //////if they swap them use a temp object and swap the dmg, display, range, fireRate, camera, and ammo.
