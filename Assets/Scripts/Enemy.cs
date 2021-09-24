@@ -28,6 +28,8 @@ public class Enemy : MonoBehaviour
     public float sightRange, attackRange;
     public bool playerInSightRange, playerInAttackRange;
 
+    private bool isFloating;
+
 
     //Grenade
     public GameObject grenade;
@@ -59,14 +61,31 @@ public class Enemy : MonoBehaviour
             AttackPlayer();
         }
 
-        // MOVE TO THE DESTINATION
-        destination = new Vector3(destination.x, transform.position.y, destination.z);
-        transform.LookAt(destination);
+        Vector3 goTo = new Vector3(destination.x, transform.position.y, destination.z);
+        transform.LookAt(goTo);
+        //Debug.Log(goTo);
         transform.Translate(Vector3.forward * movementSpeed * Time.deltaTime);
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        if(transform.position.y < 1.5f || isFloating)
+        {
+            floatUp();
+        }
 
 
 
+    }
+
+    //Float up
+    private void floatUp()
+    {
+        isFloating = true;
+        if (transform.position.y < 2.5f)
+        {
+            transform.Translate(Vector3.up * Time.deltaTime);
+        } else
+        {
+            isFloating = false;
+        }
+        
     }
 
 
@@ -105,10 +124,10 @@ public class Enemy : MonoBehaviour
 
         if (!hasAttackedAlready)
         {
-
-            //Rigidbody rbg = Instantiate(grenade, transform.position, Quaternion.identity).GetComponent<Rigidbody>();
-            //rbg.AddForce(transform.forward * 30f, ForceMode.Impulse);
-            //rbg.AddForce(transform.up * 6f, ForceMode.Impulse);
+            Vector3 spawnLoco = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
+            Rigidbody rbg = Instantiate(grenade, spawnLoco, Quaternion.identity).GetComponent<Rigidbody>();
+            rbg.AddForce(transform.forward * 15f, ForceMode.Impulse);
+            rbg.AddForce(transform.up * 4f, ForceMode.Impulse);
             Debug.Log("Shoot Shoot!");
 
             hasAttackedAlready = true;

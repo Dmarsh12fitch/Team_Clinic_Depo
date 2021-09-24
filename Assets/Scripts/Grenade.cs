@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Grenade : MonoBehaviour
 {
+
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        Destroy(gameObject, 3f);        //do a damaging explosion instead!
     }
 
     // Update is called once per frame
