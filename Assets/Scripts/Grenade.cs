@@ -9,12 +9,30 @@ public class Grenade : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Destroy(gameObject, 3f);        //do a damaging explosion instead!
+        StartCoroutine(grenadeTicking());
     }
 
-    // Update is called once per frame
-    void Update()
+    IEnumerator grenadeTicking()
     {
-        
+        yield return new WaitForSeconds(4f);
+        explodeGrenade();
+    }
+
+    void explodeGrenade()
+    {
+        Debug.Log("EXPLODE HERE!!!");
+
+
+        Destroy(gameObject, 0.5f);
+    }
+
+
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            explodeGrenade();
+        }
     }
 }

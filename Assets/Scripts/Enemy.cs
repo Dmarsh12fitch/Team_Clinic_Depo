@@ -60,18 +60,6 @@ public class Enemy : MonoBehaviour
         {
             AttackPlayer();
         }
-
-        Vector3 goTo = new Vector3(destination.x, transform.position.y, destination.z);
-        transform.LookAt(goTo);
-        //Debug.Log(goTo);
-        transform.Translate(Vector3.forward * movementSpeed * Time.deltaTime);
-        if(transform.position.y < 1.5f || isFloating)
-        {
-            floatUp();
-        }
-
-
-
     }
 
     //Float up
@@ -113,6 +101,13 @@ public class Enemy : MonoBehaviour
     private void ChasePlayer()
     {
         destination = player.position;
+        destination = new Vector3(destination.x, transform.position.y, destination.z);
+        transform.LookAt(destination);
+        transform.Translate(Vector3.forward * movementSpeed * Time.deltaTime);
+        if (transform.position.y < 1.5f || isFloating)
+        {
+            floatUp();
+        }
     }
 
     private void AttackPlayer()
@@ -126,9 +121,10 @@ public class Enemy : MonoBehaviour
         {
             Vector3 spawnLoco = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
             Rigidbody rbg = Instantiate(grenade, spawnLoco, Quaternion.identity).GetComponent<Rigidbody>();
-            rbg.AddForce(transform.forward * 15f, ForceMode.Impulse);
-            rbg.AddForce(transform.up * 4f, ForceMode.Impulse);
-            Debug.Log("Shoot Shoot!");
+            float randomX = Random.Range(10f, 20f);
+            float randomY = Random.Range(3f, 6f);
+            rbg.AddForce(transform.forward * randomX, ForceMode.Impulse);
+            rbg.AddForce(transform.up * randomY, ForceMode.Impulse);
 
             hasAttackedAlready = true;
             Invoke(nameof(ResetAttack), timeBetweenEveryAtack);
@@ -154,8 +150,6 @@ public class Enemy : MonoBehaviour
     {
         hasAttackedAlready = false;
     }
-
-
 
 
     public void takeDamage(float damage)

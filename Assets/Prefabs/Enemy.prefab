@@ -118,12 +118,12 @@ MonoBehaviour:
     m_Bits: 1024
   walkPoint: {x: 0, y: 0, z: 0}
   walkPointRange: 3
-  timeBetweenEveryAtack: 5
-  sightRange: 10
-  attackRange: 6
+  timeBetweenEveryAtack: 12
+  sightRange: 18
+  attackRange: 10
   playerInSightRange: 0
   playerInAttackRange: 0
-  grenade: {fileID: 7944545701495999154, guid: b6a43e4d497ff1041967cf385e7a073b, type: 3}
+  grenade: {fileID: 8245390493053010198, guid: 2f05739928f0fa44da4e423cc318d20c, type: 3}
 --- !u!54 &1704434886112499015
 Rigidbody:
   m_ObjectHideFlags: 0
