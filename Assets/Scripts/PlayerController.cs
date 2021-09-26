@@ -202,12 +202,14 @@ public class PlayerController : MonoBehaviour
     IEnumerator countdownToRestartDisplay()
     {
         yield return new WaitForSeconds(2f);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         restartButton.gameObject.SetActive(true);
     }
 
     public void restartGame()
     {
-        SceneManager.LoadScene("DavidTestingRoom");     //THIS MUST BE CHASNGED WITH NEW SCENE
+        SceneManager.LoadScene("DavidTestingRoom");     //THIS MUST BE CHANGED WITH NEW SCENE
     }
 
 

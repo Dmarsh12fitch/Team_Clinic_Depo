@@ -6,7 +6,7 @@ public class Grenade : MonoBehaviour
 {
     public GameObject explosionEffect;
     public float blastRadius = 3f;
-    public float damage = 30f;
+    public float damage = 26f;
 
     private bool hasBeenTriggered;
 
