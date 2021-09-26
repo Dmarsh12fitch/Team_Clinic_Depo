@@ -20,7 +20,7 @@ public class Gun : MonoBehaviour
         if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, range) && ammo > 0)
         {
             //delete this when done playtesting
-            Debug.Log(hit.transform.name);
+            //Debug.Log(hit.transform.name);
 
             //do firing animation here
             muzzleFlash.Play();

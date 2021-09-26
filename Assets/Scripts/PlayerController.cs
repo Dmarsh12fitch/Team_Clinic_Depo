@@ -1,9 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] float playerHealth = 100;
+    public GameObject healthBar;
+    private bool isDead;
+    public float enemiesKilled = 0f;
+
+    public GameObject deadScreen;
+    public GameObject restartButton;
+    public GameObject scoreShow;
+
+
     [SerializeField] Transform playerCamera = null;
     public Camera plCam;
 
@@ -47,6 +59,8 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        deadScreen.gameObject.SetActive(false);
+        restartButton.gameObject.SetActive(false);
         controller = GetComponent<CharacterController>();
         currentGunScript = currentGun.GetComponent<Gun>();
         if (lockCursor)
@@ -59,9 +73,12 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdateMouseLook();
-        UpdateMovement();
-        UpdateGun();
+        if (!isDead)
+        {
+            UpdateMouseLook();
+            UpdateMovement();
+            UpdateGun();
+        }
     }
 
 
@@ -155,13 +172,6 @@ public class PlayerController : MonoBehaviour
             plCam.fieldOfView = Mathf.Lerp(plCam.fieldOfView, normal, Time.deltaTime * smooth);
         }
 
-
-
-        //not this
-        //if standing within a certain radius of another gun, enable icon on screen and allow a test
-        //for swapping them.
-        //////if they swap them use a temp object and swap the dmg, display, range, fireRate, camera, and ammo.
-
         if (Input.GetButton("Fire1") && Time.time >= currentGunScript.ableToFireTime)
         {
             currentGunScript.ableToFireTime = Time.time + 1 / currentGunScript.fireRate;
@@ -171,5 +181,34 @@ public class PlayerController : MonoBehaviour
 
 
     }
+
+    public void takeDamage(float damage)
+    {
+        playerHealth -= damage;
+        //display the health
+        healthBar.gameObject.GetComponent<Image>().fillAmount = playerHealth / 100;
+        if(playerHealth <= 0)
+        {
+            deadScreen.gameObject.SetActive(true);
+            //keep track of how many bad guys killed and add score here?
+            scoreShow.gameObject.GetComponent<Text>().text = "         Score: " + enemiesKilled.ToString();
+            isDead = true;
+            StartCoroutine(countdownToRestartDisplay());
+        }
+    }
+
+
+    
+    IEnumerator countdownToRestartDisplay()
+    {
+        yield return new WaitForSeconds(2f);
+        restartButton.gameObject.SetActive(true);
+    }
+
+    public void restartGame()
+    {
+        SceneManager.LoadScene("DavidTestingRoom");     //THIS MUST BE CHASNGED WITH NEW SCENE
+    }
+
 
 }

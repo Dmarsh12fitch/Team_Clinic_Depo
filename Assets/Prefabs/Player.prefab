@@ -63,6 +63,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77182eb786a418d4fa4dbef218ddb444, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerHealth: 100
+  healthBar: {fileID: 0}
+  enemiesKilled: 0
+  deadScreen: {fileID: 0}
+  restartButton: {fileID: 0}
+  scoreShow: {fileID: 0}
   playerCamera: {fileID: 457305275570733609}
   plCam: {fileID: 457305275570733610}
   jumpFallOff:

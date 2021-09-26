@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class Grenade : MonoBehaviour
 {
+    public GameObject explosionEffect;
+    public float blastRadius = 3f;
+    public float damage = 30f;
 
+    private bool hasBeenTriggered;
 
     // Start is called before the first frame update
     void Start()
@@ -15,13 +19,24 @@ public class Grenade : MonoBehaviour
     IEnumerator grenadeTicking()
     {
         yield return new WaitForSeconds(4f);
-        explodeGrenade();
+        if(!hasBeenTriggered){
+            explodeGrenade();
+        }
     }
 
     void explodeGrenade()
     {
-        Debug.Log("EXPLODE HERE!!!");
+        hasBeenTriggered = true;
+        Instantiate(explosionEffect, transform.position, Quaternion.identity);
 
+        Collider[] colliders = Physics.OverlapSphere(transform.position, blastRadius);
+        foreach(Collider affectedObject in colliders)
+        {
+            if (affectedObject.gameObject.CompareTag("Player"))
+            {
+                affectedObject.gameObject.GetComponent<PlayerController>().takeDamage(damage);
+            }
+        }
 
         Destroy(gameObject, 0.5f);
     }
@@ -32,7 +47,10 @@ public class Grenade : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            explodeGrenade();
+            if (!hasBeenTriggered)
+            {
+                explodeGrenade();
+            }
         }
     }
 }

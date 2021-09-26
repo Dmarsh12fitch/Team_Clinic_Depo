@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour
     public float health;
     public float movementSpeed;
     private Rigidbody rb;
+    private bool isDead;
 
     public LayerMask whatIsGround, whatIsPlayer;
 
@@ -16,6 +17,7 @@ public class Enemy : MonoBehaviour
     public Vector3 walkPoint;
     bool walkPointSet;
     public float walkPointRange;
+    private float tooMuchTimeWalking = 4f;
 
     //For Attacking Player
     public float timeBetweenEveryAtack;
@@ -91,9 +93,20 @@ public class Enemy : MonoBehaviour
 
         Vector3 distanceToWalkPoint = transform.position - walkPoint;
 
-        if(distanceToWalkPoint.magnitude < 1f)
+        destination = new Vector3(destination.x, transform.position.y, destination.z);
+        transform.LookAt(destination);
+        transform.Translate(Vector3.forward * movementSpeed * Time.deltaTime);
+        if (transform.position.y < 1.5f || isFloating)
+        {
+            floatUp();
+        }
+
+        tooMuchTimeWalking -= Time.deltaTime;
+
+        if(distanceToWalkPoint.magnitude < 1f || tooMuchTimeWalking <= 0)
         {
             walkPointSet = false;
+            tooMuchTimeWalking = 4f;
         }
 
     }
@@ -156,8 +169,9 @@ public class Enemy : MonoBehaviour
     {
         //do some sort of effect
         health -= damage;
-        if(health <= 0)
+        if(health <= 0 && !isDead)
         {
+            isDead = true;
             deathSequence();
         }
     }
@@ -165,6 +179,7 @@ public class Enemy : MonoBehaviour
 
     void deathSequence()
     {
+        GameObject.Find("Player").gameObject.GetComponent<PlayerController>().enemiesKilled += 1f;
         rb.useGravity = true;
         //disable this enemy's functionality
         //do death anim
